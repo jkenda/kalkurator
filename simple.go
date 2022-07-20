@@ -1,4 +1,4 @@
-package env
+package main
 
 import (
 	"fmt"
@@ -22,7 +22,7 @@ var numRegex = regexp.MustCompile("[0-9]+|[0-9]+.[0-9]+$")
 func (e *Env) simple(expr string) (float64, error) {
 	expr = strings.TrimSpace(expr)
 	e.Calls++
-	fmt.Println(expr)
+	//fmt.Println(expr)
 
 	if len(expr) == 0 {
 		return 0, fmt.Errorf("empty expression")

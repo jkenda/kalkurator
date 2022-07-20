@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"env"
 	"fmt"
 	"io"
 	"os"
@@ -28,7 +27,7 @@ BNF
 func main() {
 
 	var args = os.Args[1:]
-	var env = env.New()
+	var env = NewEnv()
 
 	if len(args) == 0 {
 		var expr string

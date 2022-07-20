@@ -1,4 +1,4 @@
-package env
+package main
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ type Env struct {
 }
 
 // New - konstruktor
-func New() Env {
+func NewEnv() Env {
 	var e Env
 	e.vars = map[string]float64{
 		"e":   2.7182818284590452,
