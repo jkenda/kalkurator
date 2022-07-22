@@ -34,12 +34,10 @@ func (e *Env) Eval(expr string) (float64, error) {
 
 	for i := 1; i < len; i++ {
 		var prev, cur = rune(expr[i-1]), rune(expr[i])
-		if cur == '(' {
-			if unicode.IsDigit(prev) {
-				expr = fmt.Sprintf("%s*%s", expr[:i], expr[i:])
-				i++
-				len++
-			}
+		if cur == '(' && unicode.IsDigit(prev) {
+			expr = fmt.Sprintf("%s*%s", expr[:i], expr[i:])
+			i++
+			len++
 		}
 	}
 
