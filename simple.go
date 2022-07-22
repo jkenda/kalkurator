@@ -6,7 +6,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"unicode"
 )
 
 var numRegex = regexp.MustCompile("[0-9]+|[0-9]+.[0-9]+$")
@@ -64,43 +63,19 @@ func (e *Env) simple(expr string) (float64, error) {
 				}
 			}
 		}
-		if unicode.IsDigit(rune(expr[0])) {
-			// poskusi pretvoriti v številko
-			var i, err = strconv.ParseFloat(expr, 64)
-			if err == nil {
-				// <številka>
-				return i, nil
-			}
-			// če ne uspe, jo poskusi razdeliti
-			for i, c := range expr {
-				if !unicode.IsDigit(c) && c != '.' {
-					var e1, err1 = e.simple(expr[:i])
-					var e2, err2 = e.simple(expr[i:])
-					if err1 == nil && err2 == nil {
-						return e1 * e2, nil
-					}
-					return 0, formatErr(err1, err2)
-				}
-			}
-		} else {
-			// poskusi dobiti vrednost spremenljivke
-			i, ok := e.vars[expr]
-			if ok {
-				// <spremenljivka>
-				return i, nil
-			}
 
-			// če ne uspe, jo poskusi razdeliti
-			for i, c := range expr {
-				if c == ' ' || c == '(' {
-					var e1, err1 = e.simple(expr[:i])
-					var e2, err2 = e.simple(expr[i:])
-					if err1 == nil && err2 == nil {
-						return e1 * e2, nil
-					}
-					return 0, formatErr(err1, err2)
-				}
-			}
+		// poskusi pretvoriti v številko
+		var i, err = strconv.ParseFloat(expr, 64)
+		if err == nil {
+			// <številka>
+			return i, nil
+		}
+
+		// poskusi dobiti vrednost spremenljivke
+		i, ok := e.vars[expr]
+		if ok {
+			// <spremenljivka>
+			return i, nil
 		}
 
 		// NAPAKA

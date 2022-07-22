@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"unicode"
 )
 
 var varRegex = regexp.MustCompile("[a-z][a-zA-Z0-9]*$")
@@ -18,9 +19,9 @@ type Env struct {
 func NewEnv() Env {
 	var e Env
 	e.vars = map[string]float64{
-		"e":   2.7182818284590452,
+		"e":   2.7182818284590452354,
 		"phi": 1.61803398874989485,
-		"pi":  3.1415926535897932,
+		"pi":  3.14159265358979323846,
 	}
 	e.Calls = 0
 	return e
@@ -28,6 +29,20 @@ func NewEnv() Env {
 
 // Eval - vrne vrednost izraza
 func (e *Env) Eval(expr string) (float64, error) {
+	// poišči, če je kje implicitno množenje in dodaj *
+	var len = len(expr)
+
+	for i := 1; i < len; i++ {
+		var prev, cur = rune(expr[i-1]), rune(expr[i])
+		if cur == '(' {
+			if unicode.IsDigit(prev) {
+				expr = fmt.Sprintf("%s*%s", expr[:i], expr[i:])
+				i++
+				len++
+			}
+		}
+	}
+
 	return e.addit(expr)
 }
 
